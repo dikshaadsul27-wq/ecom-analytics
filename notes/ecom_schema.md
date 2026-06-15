@@ -247,8 +247,11 @@
 ---
 
 ## Section B — Column Dictionary
+(Paste Block 1 output here)
 
-
+```sql
+-- Block 1 output
+<table_name> | <column_name> | <data_type> | <is_nullable> | <column_default>
 table_name	column_name	data_type	is_nullable	column_default
 addresses	address_id	bigint	NO	nextval('ecom.addresses_address_id_seq'::regclass)
 addresses	line1	text	YES	
@@ -537,4 +540,9 @@ shipping_carriers	carrier_name	text	NO
 shipping_methods	shipping_method_id	bigint	NO	nextval('ecom.shipping_methods_shipping_method_id_seq'::regclass)
 shipping_methods	method_name	text	NO	
 shipping_methods	base_fee	numeric	NO	
+<img width="1614" height="8353" alt="image" src="https://github.com/user-attachments/assets/e273fea3-2fdd-4c82-bb98-f01ba6a9ef24" />
+
+...
+
+
 
