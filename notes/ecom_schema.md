@@ -4,14 +4,14 @@
 (Grain, approx row count, purpose for each table)
 [Inventory](https://github.com/dikshaadsul27-wq/ecom-analytics/blob/main/notes/Inventory.xlsx)
 ### 1.addresses
-- Grain: One order placed by a customer
+- Grain: 
 - Approx row count: 16,000
-- Purpose: Stores order-level details including status, payment_method, channel, country
+- Purpose: 
 
 ### 2.attribution_campaigns
-- Grain: One registered customer
+- Grain: bridge table
 - Approx row count: 38,405
-- Purpose: Customer profiles and attributes
+- Purpose: links marketing campaigns to attribution
 
 ### 3.attribution_touches
 - Grain: 
@@ -54,9 +54,9 @@
 - Purpose:
 
 ### 11.customer_segments
-- Grain: 
+- Grain: one segment
 - Approx row count: 10
-- Purpose:
+- Purpose: segment definitions
 
 ### 12.customers
 - Grain: 
@@ -84,34 +84,34 @@
 - Purpose:
 
 ### 17.inventory_items
-- Grain: 
+- Grain: one SKU
 - Approx row count: 2,000
-- Purpose:
+- Purpose: inventory catalog
 
 ### 18.inventory_movements
-- Grain: 
+- Grain: one movement
 - Approx row count: 30,207
-- Purpose:
+- Purpose: stock in/out tracking
 
 ### 19.loyalty_accounts
-- Grain: 
+- Grain: one account
 - Approx row count: 3,000
-- Purpose:
+- Purpose: loyalty program membership
 
 ### 20.loyalty_transactions
-- Grain: 
+- Grain: one transaction
 - Approx row count: 21,475
-- Purpose:
+- Purpose: loyalty points activity
 
 ### 21.marketing_campaigns
-- Grain: 
+- Grain: one campaign
 - Approx row count: 100
-- Purpose:
+- Purpose: campaign metadata
 
 ### 22.notifications
-- Grain: 
+- Grain: one notification send
 - Approx row count: 6,856
-- Purpose:
+- Purpose: outbound communication
 
 ### 23.order_items
 - Grain: 
@@ -159,14 +159,14 @@
 - Purpose:
 
 ### 32.product_images
-- Grain: 
+- Grain: one image
 - Approx row count: 7,188
-- Purpose:
+- Purpose: product visuals
 
 ### 33.product_reviews
-- Grain: 
+- Grain: one review
 - Approx row count: 8,000
-- Purpose:
+- Purpose: customer feedback
 
 ### 34.product_variants
 - Grain: 
@@ -209,9 +209,9 @@
 - Purpose:
 
 ### 42.segment_memberships
-- Grain: 
+- Grain: one membership
 - Approx row count: 16,461
-- Purpose:
+- Purpose: customer-to-segment mapping
 
 ### 43.session_channels
 - Grain: 
@@ -219,9 +219,9 @@
 - Purpose:
 
 ### 44.session_events
-- Grain: 
+- Grain: one event
 - Approx row count: 2,92,903
-- Purpose:
+- Purpose: instrumented event stream
 
 ### 45.sessions
 - Grain: 
@@ -258,4 +258,10 @@ Row counts:[Row counts](https://github.com/dikshaadsul27-wq/ecom-analytics/blob/
 
 Distinct value distributions on every categorical text column (status, payment_method, channel, country): [Distinct Value Distribution](https://github.com/dikshaadsul27-wq/ecom-analytics/blob/main/notes/Distinct%20Value%20Distribution.xlsx)
 
+## Section E — Empty Table Check
 
+collections → 0 rows
+collection_products → 0 rows
+consents → 0 rows
+
+Note: Empty by design — do not assume data exists.
