@@ -1,4 +1,6 @@
-/* **CMO question:** *“Where in the funnel does each channel’s traffic leak — browse, cart, checkout, or payment?”*
+/* Q3 — Funnel Conversion by Acquisition Channel
+
+**CMO question:** *“Where in the funnel does each channel’s traffic leak — browse, cart, checkout, or payment?”*
 
 **Output:** `channel, sessions, product_view_sessions, add_to_cart_sessions, begin_checkout_sessions, purchase_sessions, view_to_cart_rate, cart_to_checkout_rate, checkout_to_purchase_rate, session_to_purchase_rate`
 
