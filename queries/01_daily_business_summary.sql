@@ -1,3 +1,14 @@
+/* ### Q1 — Daily Business Summary with DoD and Same-Weekday WoW
+
+**CEO question:** *“How are we doing today vs yesterday, and vs the same day last week?”*
+
+**Output:** `order_date, revenue, orders, aov, paid_order_rate, cancelled_order_rate, refunds_amount, revenue_vs_yesterday_pct, revenue_vs_last_weekday_pct`
+
+**Sanity check:** `paid_order_rate ∈ [0, 1]` on every row. `sum(orders)` across all rows equals `count(*) of ecom.orders` for the same window.
+
+**Pattern note:** `lag(..., 1)` for DoD, `lag(..., 7)` for same-weekday WoW (removes day-of-week seasonality). Wrap every denominator in `nullif(..., 0)`.
+*/
+
 with daily as (
   select
     o.created_at,
