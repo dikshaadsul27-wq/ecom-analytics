@@ -9,28 +9,39 @@
 **Pattern note:** `lag(..., 1)` for DoD, `lag(..., 7)` for same-weekday WoW (removes day-of-week seasonality). Wrap every denominator in `nullif(..., 0)`.
 */
 
-with daily as (
-  select
-    o.created_at,
-    sum(o.total) as revenue,
-    count(*) as orders,
-    sum(case when o.status = 'paid' then 1 else 0 end)::float / nullif(count(*),0) as paid_order_rate,
-    sum(case when o.status = 'cancelled' then 1 else 0 end)::float / nullif(count(*),0) as cancelled_order_rate,
-    coalesce(sum(r.refund_amount),0) as refunds_amount
-  from ecom.orders o
-  left join ecom.order_refunds r
-    on o.order_id = r.order_id
-  group by o.created_at
+WITH daily_orders AS (
+  SELECT
+    date_trunc('day', o.created_at)::date         AS order_date
+  , COUNT(*)                                       AS orders
+  , SUM(o.total)                                   AS revenue
+  , COUNT(*) FILTER (WHERE o.payment_status = 'paid')        AS paid_orders
+  , COUNT(*) FILTER (WHERE LOWER(o.status) = 'cancelled')    AS cancelled_orders
+  FROM ecom.orders o
+  WHERE o.created_at >= (SELECT MAX(created_at) FROM ecom.orders) - INTERVAL '90 days'
+  GROUP BY 1
 )
-select
-  created_at,
-  revenue,
-  orders,
-  revenue / nullif(orders,0) as aov,
-  paid_order_rate,
-  cancelled_order_rate,
-  refunds_amount,
-  (revenue - lag(revenue,1) over(order by created_at)) / nullif(lag(revenue,1) over(order by created_at),0) as revenue_vs_yesterday_pct,
-  (revenue - lag(revenue,7) over(order by created_at)) / nullif(lag(revenue,7) over(order by created_at),0) as revenue_vs_last_weekday_pct
-from daily
-order by created_at;
+
+, daily_refunds AS (
+  SELECT
+    date_trunc('day', r.created_at)::date          AS order_date
+  , SUM(r.amount)                                  AS refunds_amount
+  FROM ecom.refunds r
+  WHERE r.created_at >= (SELECT MAX(created_at) FROM ecom.orders) - INTERVAL '90 days'
+  GROUP BY 1
+)
+
+SELECT
+  ord.order_date
+, ord.revenue
+, ord.orders
+, (ord.revenue * 1.0 / NULLIF(ord.orders, 0))                  AS aov
+, (ord.paid_orders      * 1.0 / ord.orders)                    AS paid_order_rate
+, (ord.cancelled_orders * 1.0 / ord.orders)                    AS cancelled_order_rate
+, COALESCE(dr.refunds_amount, 0)                               AS refunds_amount
+, (ord.revenue - LAG(ord.revenue, 1) OVER (ORDER BY ord.order_date))
+  / NULLIF(LAG(ord.revenue, 1) OVER (ORDER BY ord.order_date), 0)  AS revenue_vs_yesterday_pct
+, (ord.revenue - LAG(ord.revenue, 7) OVER (ORDER BY ord.order_date))
+  / NULLIF(LAG(ord.revenue, 7) OVER (ORDER BY ord.order_date), 0)  AS revenue_vs_last_weekday_pct
+FROM daily_orders ord                     
+LEFT JOIN daily_refunds dr USING (order_date)
+ORDER BY ord.order_date DESC;
